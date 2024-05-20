@@ -1,0 +1,9 @@
+camera: hik
+
+odom2camera:
+  xyz: "\"0.057936 0.0  0.086061\""
+  rpy: "\"0.0  0.174532  0.0\""
+
+detector_log_level: INFO
+tracker_log_level: INFO
+serial_log_level: INFO
