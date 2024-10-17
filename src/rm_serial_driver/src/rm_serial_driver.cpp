@@ -22,8 +22,8 @@
 #include "rm_serial_driver/rm_serial_driver.hpp"
 
 // 决策依赖库
-#include "decision_moudle/msg/hp.hpp"
-#include "decision_moudle/msg/site.hpp"
+// #include "decision_moudle/msg/hp.hpp"
+// #include "decision_moudle/msg/site.hpp"
 
 namespace rm_serial_driver
 {
@@ -44,8 +44,8 @@ RMSerialDriver::RMSerialDriver(const rclcpp::NodeOptions & options)
   latency_pub_ = this->create_publisher<std_msgs::msg::Float64>("/latency", 10);
   marker_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/aiming_point", 10);
 
-  site_pub = this->create_publisher<decision_moudle::msg::Site>("/incident", 10);
-  health_pub = this->create_publisher<decision_moudle::msg::Hp>("/allhealth", 10);
+  // site_pub = this->create_publisher<decision_moudle::msg::Site>("/incident", 10);
+  // health_pub = this->create_publisher<decision_moudle::msg::Hp>("/allhealth", 10);
   // Detect parameter client
   detector_param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "armor_detector");
 
@@ -125,10 +125,10 @@ void RMSerialDriver::receiveData()
   std::vector<uint8_t> data;
 
   // 用于提取前11位数据的掩码
-  uint32_t mask = 0x7FF;
-  uint32_t extracted_bits;
-  uint16_t purchase_bullet;
-  uint8_t team = -1;
+  // uint32_t mask = 0x7FF;
+  // uint32_t extracted_bits;
+  // uint16_t purchase_bullet;
+  // uint8_t team = -1;
   while (rclcpp::ok()) {
     try {
       serial_driver_->port()->receive(header);
@@ -167,10 +167,10 @@ void RMSerialDriver::receiveData()
           t.transform.rotation = tf2::toMsg(q);
           tf_broadcaster_->sendTransform(t);
 
-           if (packet.detect_color == 1)
-             team = 0;
-            else
-             team = 1;
+          //  if (packet.detect_color == 1)
+          //    team = 0;
+          //   else
+          //    team = 1;
 
           if (abs(packet.aim_x) > 0.01) {
             aiming_point_.header.stamp = this->now();
@@ -182,89 +182,78 @@ void RMSerialDriver::receiveData()
         } else {
           RCLCPP_ERROR(get_logger(), "CRC error!");
         }
-      } 
-      else if (header[0] == 0xA6)   // 导航决策
-      {
-      	RCLCPP_INFO(get_logger(), "gggggggggggggggg");
-        data.resize(sizeof(NavPacket) - 1);
-        serial_driver_->port()->receive(data);
+      // } 
+      // else if (header[0] == 0xA6)   // 导航决策
+      // {
+      // 	RCLCPP_INFO(get_logger(), "gggggggggggggggg");
+      //   data.resize(sizeof(NavPacket) - 1);
+      //   serial_driver_->port()->receive(data);
+      //   data.insert(data.begin(), header[0]);
+      //   NavPacket nav_packet = nav_fromVector(data);
+      //   // CRC 校验
+      //   bool crc_ok = crc16::Verify_CRC16_Check_Sum(reinterpret_cast<const uint8_t*>(&nav_packet), sizeof(nav_packet));
+      //   if (true || crc_ok) 
+      //   {
+      //   // 数据包有效，处理数据
+      //     // Hp.msg
+      //     hp_msg.red_1_robot_hp = nav_packet.game_robot_HP_t.red_1_robot_HP;
+      //     hp_msg.red_3_robot_hp = nav_packet.game_robot_HP_t.red_3_robot_HP;
+      //     hp_msg.red_4_robot_hp = nav_packet.game_robot_HP_t.red_4_robot_HP;
+      //     hp_msg.red_5_robot_hp = nav_packet.game_robot_HP_t.red_5_robot_HP;
+      //     hp_msg.red_7_robot_hp = nav_packet.game_robot_HP_t.red_7_robot_HP;
+      //     hp_msg.blue_1_robot_hp = nav_packet.game_robot_HP_t.blue_1_robot_HP;
+      //     hp_msg.blue_3_robot_hp = nav_packet.game_robot_HP_t.blue_3_robot_HP;
+      //     hp_msg.blue_4_robot_hp = nav_packet.game_robot_HP_t.blue_4_robot_HP;
+      //     hp_msg.blue_5_robot_hp = nav_packet.game_robot_HP_t.blue_5_robot_HP;
+      //     hp_msg.blue_7_robot_hp = nav_packet.game_robot_HP_t.blue_7_robot_HP;
+      //     hp_msg.rest_bullet = nav_packet.projectile_allowance_t;
+      //     // 使用掩码提取第0到10位数据
+      //     extracted_bits = nav_packet.sentry_info & mask;
+      //     // 将提取到的数据转换为uint16_t类型
+      //     purchase_bullet = static_cast<uint16_t>(extracted_bits);
+      //     hp_msg.purchase_bullet = 350 - purchase_bullet; // 350发可购买数-已经购买数
+      //     health_pub->publish(hp_msg);
+      //     // Site.msg
+      //     uint8_t bit[12] = {0}; 
+      //     for(int i = 0; i <=11; i++)
+      //     {
+      //        bit[i] = (nav_packet.event_data_t.event_data >> i) & 1;
+      //     }
+      //     if (bit[3] || bit[4] || bit[5])
+      //       site_msg.energy = 1;
+      //     else
+      //       site_msg.energy = 0;
+      //     if (bit[6] == 1 && bit[7] == 0)
+      //       site_msg.r2 = 1;
+      //     else if (bit[6] == 0 && bit[7] == 1)
+      //       site_msg.r2 = 2;
+      //     else
+      //       site_msg.r2 = 0;
+      //     if (bit[8] == 1 && bit[9] == 0)
+      //       site_msg.r3 = 1;
+      //     else if (bit[8] == 0 && bit[9] == 1)
+      //       site_msg.r3 = 2;
+      //     else
+      //       site_msg.r3 = 0;
+      //     if (bit[10] == 1 && bit[11] == 0)
+      //       site_msg.r4 = 1;
+      //     else if (bit[10] == 0 && bit[11] == 1)
+      //       site_msg.r4 = 2;
+      //     else
+      //       site_msg.r4 = 0;
+      //     site_msg.resttime = nav_packet.game_status_t.stage_remain_time;
+      //     site_msg.blue_outpost_hp = nav_packet.game_robot_HP_t.blue_outpost_HP;
+      //     site_msg.blue_base_hp = nav_packet.game_robot_HP_t.blue_base_HP;
+      //     site_msg.red_outpost_hp = nav_packet.game_robot_HP_t.red_outpost_HP;
+      //     site_msg.red_base_hp = nav_packet.game_robot_HP_t.red_base_HP;
+      //     site_msg.team = team;
+      //     site_pub->publish(site_msg);
+      //   } 
 
-        data.insert(data.begin(), header[0]);
-        NavPacket nav_packet = nav_fromVector(data);
-        // CRC 校验
-        bool crc_ok = crc16::Verify_CRC16_Check_Sum(reinterpret_cast<const uint8_t*>(&nav_packet), sizeof(nav_packet));
-        if (true || crc_ok) 
-        {
-        // 数据包有效，处理数据
-          // Hp.msg
-          hp_msg.red_1_robot_hp = nav_packet.game_robot_HP_t.red_1_robot_HP;
-          hp_msg.red_3_robot_hp = nav_packet.game_robot_HP_t.red_3_robot_HP;
-          hp_msg.red_4_robot_hp = nav_packet.game_robot_HP_t.red_4_robot_HP;
-          hp_msg.red_5_robot_hp = nav_packet.game_robot_HP_t.red_5_robot_HP;
-          hp_msg.red_7_robot_hp = nav_packet.game_robot_HP_t.red_7_robot_HP;
-
-          hp_msg.blue_1_robot_hp = nav_packet.game_robot_HP_t.blue_1_robot_HP;
-          hp_msg.blue_3_robot_hp = nav_packet.game_robot_HP_t.blue_3_robot_HP;
-          hp_msg.blue_4_robot_hp = nav_packet.game_robot_HP_t.blue_4_robot_HP;
-          hp_msg.blue_5_robot_hp = nav_packet.game_robot_HP_t.blue_5_robot_HP;
-          hp_msg.blue_7_robot_hp = nav_packet.game_robot_HP_t.blue_7_robot_HP;
-
-          hp_msg.rest_bullet = nav_packet.projectile_allowance_t;
-
-          // 使用掩码提取第0到10位数据
-          extracted_bits = nav_packet.sentry_info & mask;
-          // 将提取到的数据转换为uint16_t类型
-          purchase_bullet = static_cast<uint16_t>(extracted_bits);
-          hp_msg.purchase_bullet = 350 - purchase_bullet; // 350发可购买数-已经购买数
-          health_pub->publish(hp_msg);
-
-          // Site.msg
-          uint8_t bit[12] = {0}; 
-          for(int i = 0; i <=11; i++)
-          {
-             bit[i] = (nav_packet.event_data_t.event_data >> i) & 1;
-          }
-
-          if (bit[3] || bit[4] || bit[5])
-            site_msg.energy = 1;
-          else
-            site_msg.energy = 0;
-          
-          if (bit[6] == 1 && bit[7] == 0)
-            site_msg.r2 = 1;
-          else if (bit[6] == 0 && bit[7] == 1)
-            site_msg.r2 = 2;
-          else
-            site_msg.r2 = 0;
-
-          if (bit[8] == 1 && bit[9] == 0)
-            site_msg.r3 = 1;
-          else if (bit[8] == 0 && bit[9] == 1)
-            site_msg.r3 = 2;
-          else
-            site_msg.r3 = 0;
-
-          if (bit[10] == 1 && bit[11] == 0)
-            site_msg.r4 = 1;
-          else if (bit[10] == 0 && bit[11] == 1)
-            site_msg.r4 = 2;
-          else
-            site_msg.r4 = 0;
-
-          site_msg.resttime = nav_packet.game_status_t.stage_remain_time;
-          site_msg.blue_outpost_hp = nav_packet.game_robot_HP_t.blue_outpost_HP;
-          site_msg.blue_base_hp = nav_packet.game_robot_HP_t.blue_base_HP;
-          site_msg.red_outpost_hp = nav_packet.game_robot_HP_t.red_outpost_HP;
-          site_msg.red_base_hp = nav_packet.game_robot_HP_t.red_base_HP;
-          site_msg.team = team;
-          site_pub->publish(site_msg);
-
-        } 
-
-        else 
-        {
-          RCLCPP_ERROR(get_logger(), "CRC error!");
-        }
+        // else 
+        // {
+        //   RCLCPP_ERROR(get_logger(), "CRC error!");
+        // }
       }
       
       else {

@@ -27,8 +27,8 @@
 #include <geometry_msgs/msg/twist_stamped.hpp>
 
 // 决策依赖库
-#include "decision_moudle/msg/hp.hpp"
-#include "decision_moudle/msg/site.hpp"
+// #include "decision_moudle/msg/hp.hpp"
+// #include "decision_moudle/msg/site.hpp"
 
 namespace rm_serial_driver
 {
@@ -72,8 +72,8 @@ private:
   visualization_msgs::msg::Marker aiming_point_;
 
   // 决策消息
-  decision_moudle::msg::Site site_msg;
-  decision_moudle::msg::Hp hp_msg;
+  // decision_moudle::msg::Site site_msg;
+  // decision_moudle::msg::Hp hp_msg;
 
   // Broadcast tf from odom to gimbal_link
   double timestamp_offset_ = 0;
@@ -86,8 +86,8 @@ private:
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr latency_pub_;
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr marker_pub_;
 
-  rclcpp::Publisher<decision_moudle::msg::Site>::SharedPtr site_pub;
-  rclcpp::Publisher<decision_moudle::msg::Hp>::SharedPtr health_pub;
+  // rclcpp::Publisher<decision_moudle::msg::Site>::SharedPtr site_pub;
+  // rclcpp::Publisher<decision_moudle::msg::Hp>::SharedPtr health_pub;
 
   std::thread receive_thread_;
 };
