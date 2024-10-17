@@ -14,7 +14,22 @@ wget http://fishros.com/install -O fishros && . fishros
 
 ```
 # 方法一，手动安装每个包
-sudo apt install ros-humble-io-context ros-humble-serial-driver ros-humble-udp-msgs ros-humble-ament-clang-format ros-humble-ament-cmake-clang-format ros-humble-compressed-depth-image-transport ros-humble-compressed-image-transport ros-humble-image-transport-plugins ros-humble-theora-image-transport ros-humble-camera-calibration-parsers ros-humble-camera-info-manager ros-humble-camera-calibration ros-humble-vision-opencv ros-humble-xacro ros-humble-asio-cmake-module -y
+sudo apt install \
+  ros-humble-io-context \
+  ros-humble-serial-driver \
+  ros-humble-udp-msgs \
+  ros-humble-ament-clang-format \
+  ros-humble-ament-cmake-clang-format \
+  ros-humble-compressed-depth-image-transport \
+  ros-humble-compressed-image-transport \
+  ros-humble-image-transport-plugins \
+  ros-humble-theora-image-transport \
+  ros-humble-camera-calibration-parsers \
+  ros-humble-camera-info-manager \
+  ros-humble-camera-calibration \
+  ros-humble-vision-opencv \
+  ros-humble-xacro \
+  ros-humble-asio-cmake-module -y
 
 # 方法二，rosdep自动安装，但需要好的网络(翻墙)
 sudo rosdep init
